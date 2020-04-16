@@ -31,10 +31,7 @@ open class FrameworkTest : DefaultTask(), KonanTestExecutable {
     lateinit var testName: String
 
     @Input
-    lateinit var frameworkNames: List<String>
-
-    @Input
-    lateinit var frameworkArtifactNames: List<String>
+    lateinit var frameworks: List<Framework>
 
     @Input
     var fullBitcode: Boolean = false
@@ -43,6 +40,24 @@ open class FrameworkTest : DefaultTask(), KonanTestExecutable {
     var codesign: Boolean = true
 
     val testOutput: String = project.testOutputFramework
+
+    /**
+     * Framework description.
+     * @param name is the framework name,
+     * @param sources framework sources,
+     * @param artifact the name of the resulting artifact,
+     * @param opts additional options for the compiler,
+     * @param bitcode bitcode embedding in the framework,
+     * @param library library dependency name.
+     */
+    data class Framework(
+            val name: String,
+            val sources: List<String>,
+            val artifact: String = name,
+            val opts: List<String> = emptyList(),
+            val bitcode: Boolean = false,
+            val library: String? = null
+    )
 
     override val executable: String
         get() {
@@ -63,14 +78,10 @@ open class FrameworkTest : DefaultTask(), KonanTestExecutable {
             setRootDependency("${target}CrossDist", "${target}CrossDistRuntime", "distCompiler")
         }
         check(::testName.isInitialized) { "Test name should be set" }
-        check(::frameworkNames.isInitialized) { "Framework names should be set" }
+        check(::frameworks.isInitialized) { "Frameworks should be set" }
 
-        if (!::frameworkArtifactNames.isInitialized) {
-            frameworkArtifactNames = frameworkNames
-        }
-
-        frameworkNames.forEach { frameworkName ->
-            val compileTask = project.tasks.getByName("compileKonan$frameworkName")
+        frameworks.forEach { fr ->
+            val compileTask = project.tasks.getByName("compileKonan${fr.name}")
             doBeforeBuild?.let { compileTask.doFirst(it) }
             dependsOn(compileTask)
         }
@@ -83,9 +94,10 @@ open class FrameworkTest : DefaultTask(), KonanTestExecutable {
 
     private fun buildTestExecutable() {
         val frameworkParentDirPath = "$testOutput/$testName/${project.testTarget.name}"
-        frameworkArtifactNames.forEach { frameworkName ->
-            val frameworkPath = "$frameworkParentDirPath/$frameworkName.framework"
-            val frameworkBinaryPath = "$frameworkPath/$frameworkName"
+        frameworks.forEach { framework ->
+            val frameworkArtifact = framework.artifact
+            val frameworkPath = "$frameworkParentDirPath/$frameworkArtifact.framework"
+            val frameworkBinaryPath = "$frameworkPath/$frameworkArtifact"
             validateBitcodeEmbedding(frameworkBinaryPath)
             if (codesign) codesign(project, frameworkPath)
         }

@@ -3954,6 +3954,37 @@ task library_ir_provider_mismatch(type: KonanDriverTest) {
     }
 }
 
+Task frameworkTest(String name, Closure<FrameworkTest> configurator) {
+    def task = project.tasks.create(name, FrameworkTest)
+    task.configure(configurator)
+    task.configure { t ->
+        konanArtifacts {
+            t.frameworks.forEach { fr ->
+                framework(name: fr.name, targets: [target.name]) {
+                    fr.sources.forEach { src ->
+                        srcFiles src
+                    }
+                    baseDir "$testOutputFramework/${t.testName}"
+
+                    if (fr.library != null) {
+                        libraries {
+                            artifact fr.library
+                        }
+                    }
+
+                    if (!useCustomDist) {
+                        dependsOn ":${target.name}CrossDistRuntime", ':distCompiler'
+                    }
+
+                    extraOpts fr.bitcode ? "-Xembed-bitcode" : "-Xembed-bitcode-marker"
+                    extraOpts project.globalTestArgs
+                }
+            }
+        }
+    }
+    return task
+}
+
 if (isAppleTarget(project)) {
     task testObjCExport(type: FrameworkTest) {
         final String frameworkName = 'Kt'
