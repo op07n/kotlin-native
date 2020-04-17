@@ -31,9 +31,10 @@ public annotation class Retain
 @Retention(AnnotationRetention.BINARY)
 public annotation class RetainForTarget(val target: String)
 
-
+/** @suppress */
 public typealias ThreadLocal = kotlin.native.concurrent.ThreadLocal
 
+/** @suppress */
 public typealias SharedImmutable = kotlin.native.concurrent.SharedImmutable
 
 /**
