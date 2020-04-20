@@ -166,6 +166,6 @@ public annotation class PublishedApi
  * @property exceptionClasses the list of checked exception classes that may be thrown by the function.
  */
 @SinceKotlin("1.4")
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.CONSTRUCTOR)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.CONSTRUCTOR)
 @Retention(AnnotationRetention.BINARY)
 public actual annotation class Throws(actual vararg val exceptionClasses: KClass<out Throwable>)
