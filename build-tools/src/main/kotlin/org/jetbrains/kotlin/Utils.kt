@@ -318,3 +318,12 @@ fun Project.mergeManifestsByTargets(source: File, destination: File) {
 
     destinationFile.saveProperties(destinationProperties)
 }
+
+// region File helpers to query
+enum class Language(val extension: String) {
+    Kotlin(".kt"), ObjC(".m"), Swift(".swift")
+}
+
+fun Project.filesFrom(dir: String, language: Language) {}
+
+// endregion
