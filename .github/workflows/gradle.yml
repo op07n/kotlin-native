@@ -23,4 +23,4 @@ jobs:
     - name: Build with Gradle
       run: |
            cd samples/win32
-           ..\gradlew assemble
+           ..\gradlew dist crossDist
