@@ -1,3 +1,9 @@
+Duplicate of https://github.com/JetBrains/kotlin-native  for Win32 native test
+
+
+
+
+
 [![official project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![version](https://img.shields.io/badge/dynamic/json.svg?color=orange&label=latest%20version&query=%24.tag_name&url=https%3A%2F%2Fgithub.com%2FJetBrains%2Fkotlin-native%2Freleases%2Flatest)](https://github.com/JetBrains/kotlin-native/releases/latest)
 # Kotlin/Native  #
