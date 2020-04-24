@@ -31,6 +31,11 @@ public annotation class Retain
 @Retention(AnnotationRetention.BINARY)
 public annotation class RetainForTarget(val target: String)
 
+
+/** @suppress */
+@Deprecated("Use common kotlin.Throws annotation instead", ReplaceWith("kotlin.Throws"), DeprecationLevel.WARNING)
+public typealias Throws = kotlin.Throws
+
 /** @suppress */
 public typealias ThreadLocal = kotlin.native.concurrent.ThreadLocal
 
